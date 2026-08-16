@@ -26,6 +26,17 @@ Multi-channel message bridge for [DeepSeek Harness](https://github.com/deepseek-
 
 ## 安装（bundle）
 
+**方式一：从 npm 安装（推荐）**
+
+```bash
+# 在 profile（如 ~/.dsh/profiles/web）目录执行
+pnpm add dsh-omni-bridge
+```
+
+然后在 profile 的 `package.json` 的 `dsh.profile.bundles` 追加 `"dsh-omni-bridge"`，重启 DSH 生效。
+
+**方式二：本地 tgz 安装**
+
 1. `npm pack` 打包成 tgz（或直接用仓库目录）。
 2. 在 profile（如 `~/.dsh/profiles/web`）的 `package.json`：
    - `dsh.profile.bundles` 追加 `"dsh-omni-bridge"`；
