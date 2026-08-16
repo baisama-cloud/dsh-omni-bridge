@@ -1,9 +1,31 @@
 {
   "name": "dsh-omni-bridge",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Multi-channel message bridge for DeepSeek Harness (DSH): route WeChat (ClawBot/iLink), QQ, and Feishu (Lark) chat messages to a DSH agent and relay its replies back. 多通道桥接：微信 ClawBot / QQ / 飞书消息接入 DSH agent 并回传回复。",
   "license": "MIT",
   "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-slots"
+      ]
+    }
+  },
   "keywords": [
     "deepseek",
     "harness",
@@ -21,9 +43,8 @@
     "@larksuiteoapi/node-sdk": "^1.73.0"
   },
   "files": [
-    "host.js",
-    "client.js",
-    "feishu-ws.cjs",
+    "lib",
+    "cordis.patch.yml",
     "README.md",
     "LICENSE"
   ]

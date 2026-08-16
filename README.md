@@ -18,21 +18,30 @@ Multi-channel message bridge for [DeepSeek Harness](https://github.com/deepseek-
 
 ## 形式说明
 
-当前以 **DSH 动态 Cordis 插件**形式提供（通过 `cordis_define` / `cordis_run` 加载，进程级，DSH 重启会清空）：
+当前以 **DSH 持久化 bundle** 形式提供（host + client 打包进 profile，跨 DSH 重启生效）：
 
-- `host.js` —— host 半区：三个通道的收发 + 会话桥接 + 定时轮询。
-- `client.js` —— client 半区：设置页（微信/QQ/飞书三张卡片）。
-- `feishu-ws.cjs` —— 飞书长连接子进程（由 host 用 `node` 拉起）。
+- `lib/index.js` —— host 半区：三个通道的收发 + 会话桥接 + 定时轮询，通过 `webServer` 路由对外提供 RPC（`/omni-bridge/*`）。
+- `lib/client.js` —— client 半区：设置页（微信/QQ/飞书三张卡片），通过 `fetch` 调用 host 路由。
+- `lib/feishu-ws.cjs` —— 飞书长连接子进程（由 host 用 `node` 拉起）。
+
+## 安装（bundle）
+
+1. `npm pack` 打包成 tgz（或直接用仓库目录）。
+2. 在 profile（如 `~/.dsh/profiles/web`）的 `package.json`：
+   - `dsh.profile.bundles` 追加 `"dsh-omni-bridge"`；
+   - `dependencies` 追加 `"dsh-omni-bridge": "file:<tgz 路径>"`。
+3. 在 profile 目录执行 `pnpm install`（会自动安装 `@larksuiteoapi/node-sdk` 依赖）。
+4. 重启 DSH（bundle 层在启动时组合，需重启生效）。
 
 ## 依赖
 
-飞书长连接依赖官方 SDK：
+飞书长连接依赖官方 SDK，由 bundle 的 `dependencies` 自动安装：
 
 ```bash
-npm install @larksuiteoapi/node-sdk
+pnpm add @larksuiteoapi/node-sdk   # 或随 bundle 一起 pnpm install
 ```
 
-`feishu-ws.cjs` 通过 `require('@larksuiteoapi/node-sdk')` 加载 SDK；请确保 SDK 安装在一个能从该脚本目录向上解析到 `node_modules` 的位置。脚本内也内置了一个绝对路径回退（`D:/Document/DSH/工作区/node_modules/...`），实际部署时请按需改成你自己的路径。
+`lib/feishu-ws.cjs` 通过 `require('@larksuiteoapi/node-sdk')` 加载 SDK，Node 从该脚本所在目录向上解析到 profile 的 `node_modules`。
 
 ## 配置
 
@@ -68,18 +77,14 @@ npm install @larksuiteoapi/node-sdk
 4. 版本管理与发布：**创建版本并发布**（不发布权限和订阅不生效）。
 5. 机器人加入会话/群。
 
-## 使用（动态插件）
+## 使用
 
-在 DSH 中通过动态 Cordis 插件工具加载：
-
-- `cordis_define`（kind `existing` 追加 Package，**host + client 必须同时提交**）→ `cordis_run`（`update`）。
-- 加载后设置页出现「远程桥接」卡片。
+安装并重启后，设置页出现「远程桥接」卡片（微信/QQ/飞书三张配置卡）。
 
 ## 已知限制
 
-- 动态插件是进程级的，DSH 重启后需重新加载。
-- host 使用动态插件特有的 `harness.handle(...)` 做前后端通信；若要做成持久化 bundle（`dsh` profile bundle），需改用 bundle 的 host-client RPC 机制。
 - 飞书被动回复有时效（收到消息后有限时间内回复）。
+- `weixin-qr` / `weixin-poll` 使用 iLink 扫码登录流程，`botToken` 会写入 `~/.dsh/omni-bridge-config.json`。
 
 ## License
 
