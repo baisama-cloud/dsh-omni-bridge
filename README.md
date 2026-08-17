@@ -44,7 +44,7 @@ pnpm add dsh-omni-bridge
 3. 在 profile 目录执行 `pnpm install`（会自动安装 `@larksuiteoapi/node-sdk` 依赖）。
 4. 重启 DSH（bundle 层在启动时组合，需重启生效）。
 
-## 依赖
+## 依赖 
 
 飞书长连接依赖官方 SDK，由 bundle 的 `dependencies` 自动安装：
 
