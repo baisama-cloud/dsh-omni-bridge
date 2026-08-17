@@ -3,6 +3,7 @@
 Multi-channel message bridge for [DeepSeek Harness](https://github.com/deepseek-ai/DeepSeek-Harness) (DSH): route **WeChat (ClawBot/iLink)**, **QQ**, and **Feishu (Lark)** chat messages to a DSH agent, and relay the agent's replies back to the sender.
 
 多通道桥接插件：把微信 ClawBot / QQ / 飞书的消息接入 DSH agent，并把回复回传给发消息的人。
+远程操控Agent。
 
 ## Channels
 
