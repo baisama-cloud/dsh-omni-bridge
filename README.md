@@ -57,18 +57,27 @@ pnpm add @larksuiteoapi/node-sdk   # 或随 bundle 一起 pnpm install
 
 ## 配置
 
-配置文件位于 `~/.dsh/omni-bridge-config.json`：
+配置文件位于 `~/.dsh/omni-bridge-config.json`（写入时权限为 `0600`，目录 `0700`）：
 
 ```json
 {
   "runtime": { "provider": "deepseek-official", "model": "deepseek-v4-flash" },
   "channels": {
-    "weixin": { "enabled": true, "botToken": "...", "defaultTarget": "" },
-    "qq":      { "enabled": true, "appId": "...", "secret": "..." },
-    "feishu":  { "enabled": true, "appId": "cli_...", "appSecret": "...", "requireMention": true }
+    "weixin": { "enabled": true, "botToken": "...", "defaultTarget": "", "allowedUsers": [], "allowAll": false },
+    "qq":      { "enabled": true, "appId": "...", "secret": "...", "allowedUsers": [], "allowAll": false },
+    "feishu":  { "enabled": true, "appId": "cli_...", "appSecret": "...", "requireMention": true, "allowedUsers": [], "allowAll": false }
   }
 }
 ```
+
+### 发送者白名单（安全默认）
+
+每个频道默认**拒绝所有入站消息**（`allowAll: false` 且 `allowedUsers` 为空时无人可用）。运营者二选一显式放行：
+
+- `allowedUsers`: 允许的发送者 ID 数组。微信用 `from_user_id`（如 `xxx@im.wechat`），QQ 单聊/群聊用成员 `openid`，飞书用 `sender_open_id`。未授权消息会收到一条「未授权」提示，并在 host 日志打印 `[bridge] unauthorized <channel> sender=<id>`（可用它找到自己的 ID）。
+- `allowAll: true`: 允许所有人（显式选择开放，不建议生产使用）。
+
+设置页每个通道卡片也提供「允许的用户 ID（逗号分隔）」与「允许所有人」开关。
 
 ### 微信
 
