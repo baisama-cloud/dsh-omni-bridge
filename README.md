@@ -4,7 +4,7 @@ Multi-channel message bridge for [DeepSeek Harness](https://github.com/deepseek-
 
 多通道桥接插件：把微信 ClawBot / QQ / 飞书的消息接入 DSH agent，并把回复回传给发消息的人。
 远程操控Agent。
-
+ 
 ## Channels
 
 | 通道 | 收消息 | 发消息 | 凭据 |
