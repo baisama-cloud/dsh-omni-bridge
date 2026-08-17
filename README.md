@@ -98,5 +98,5 @@ pnpm add @larksuiteoapi/node-sdk   # 或随 bundle 一起 pnpm install
 - `weixin-qr` / `weixin-poll` 使用 iLink 扫码登录流程，`botToken` 会写入 `~/.dsh/omni-bridge-config.json`。
 
 ## License
- 
+
 MIT
